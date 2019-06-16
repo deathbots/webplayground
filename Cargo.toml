@@ -3,6 +3,7 @@ name = "webplayground"
 version = "0.1.0"
 authors = ["deathbots <>"]
 edition = "2018"
+build = "build.rs"
 
 [dependencies]
 rocket = "0.4.1"
