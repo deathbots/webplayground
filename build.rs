@@ -1,11 +1,12 @@
 use std::env;
 use std::io::Result;
 use std::path::Path;
-use std::process::{Command, ExitStatus};
+use std::process::{Command, ExitStatus, Child};
 use std::ffi::OsStr;
 use std::fmt::Debug;
+use std::error::Error;
 
-fn run_cmd_in_dir<I, S>(working_dir: &Path, prog_name: &str, args: I) -> Result<ExitStatus>
+fn run_cmd_in_dir<I, S>(working_dir: &Path, prog_name: &str, args: I) -> Result<Child>
 where
     I: IntoIterator<Item=S> + Debug, S: AsRef<OsStr>,
 {
@@ -13,7 +14,7 @@ where
     Command::new(prog_name)
         .args(args)
         .current_dir(working_dir)
-        .status()
+        .spawn()
 }
 
 fn main() {
@@ -31,5 +32,9 @@ fn main() {
     println!("Executing webpack");
     run_cmd_in_dir(ui_dir, "npx", &["webpack", "--mode", webpack_target]).unwrap();
 
+    match run_cmd_in_dir(&Path::new(ui_dir), "npm", &["install"]) {
+      Ok(_) => println!("Done"),
+      Err(err) => println!("Failed - received error: {}", err)
+    }
 }
 
