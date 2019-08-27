@@ -6,4 +6,5 @@ edition = "2018"
 build = "build.rs"
 
 [dependencies]
-rocket = "0.4.1"
+hyper = "0.12.33"
+futures = "0.1.28"
